@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<input type="text" name="tag" id="tagid" />
+@section scripts{
+
+
+    <script>
+        $(function () {
+            $("#tagid").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/Home/FetchTagList",
+                        data: JSON.stringify({tag:$('#tagid').val()}),
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        dataFilter: function (data) { return data; },
+                        success: function (data) {
+                            console.log(data.data);
+                            response($.map(data.data, function (item) {
+                                return {
+                                    value: item.TagName
+                                }
+                            }))
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                            alert(textStatus);
+                        }
+                    });
+                },
+                minLength: 1
+            });
+        });
+</script>
+    }
